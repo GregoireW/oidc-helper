@@ -90,6 +90,35 @@ For help and available options, run:
   ./oidc-helper --provider provider2
   ```
 
+- **Authenticate a curl call with the default provider:**
+  ```sh
+  curl -H "Authorization: Bearer $(oidc-helper)" https://api.your-service.com/endpoint
+  ```
+
+- **Authentication on VSCode MCP client:**
+  ```json
+  {
+    "mcp": {
+      "inputs": [
+        {
+          "type": "command",
+          "id": "OIDC_TOKEN_DEFAULT",
+          "command": "oidc-helper"
+        }
+      ],
+      "servers": {
+        "your_tool": {
+          "type": "http",
+          "url": "https://api.your-service.com/mcp",
+          "headers": {
+            "Authorization": "Bearer ${input:OIDC_TOKEN_DEFAULT}"
+          }
+        }
+      }
+    }
+  }
+  ```
+
 - **Show all available options:**
   ```sh
   ./oidc-helper --help
