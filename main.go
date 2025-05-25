@@ -17,6 +17,8 @@ import (
 	"time"
 )
 
+var Version = "dev"
+
 func openBrowser(url string) {
 	var cmd string
 	var args []string
@@ -35,6 +37,7 @@ func openBrowser(url string) {
 }
 
 func main() {
+	versionFlag := flag.Bool("version", false, "show version and exit")
 	daemon := flag.Bool("daemon", false, "run as daemon to hold token in memory")
 	pipeName := flag.String("pipe", "oidc-helper-pipe", "named pipe/socket name for daemon communication")
 	help := flag.Bool("help", false, "display help and exit")
@@ -45,10 +48,16 @@ func main() {
 	logutil.LogLevel = logutil.ParseLogLevel(*logFlag)
 
 	flag.Usage = func() {
+		fmt.Fprintf(os.Stderr, "oidc-helper version: %s\n", Version)
 		fmt.Fprintf(os.Stderr, "Usage: %s [options]\n", os.Args[0])
 		flag.PrintDefaults()
 	}
 	flag.Parse()
+
+	if *versionFlag {
+		fmt.Println(Version)
+		os.Exit(0)
+	}
 
 	if *help || *h {
 		flag.Usage()

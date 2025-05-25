@@ -22,17 +22,21 @@ jobs:
       - name: Set up build output directory
         run: mkdir -p dist
 
+      - name: Get version from tag
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
+
       - name: Build for Linux amd64
         run: |
-          GOOS=linux GOARCH=amd64 go build -o dist/oidc-helper-linux-amd64
+          GOOS=linux GOARCH=amd64 go build -ldflags "-X main.Version=${VERSION}" -o dist/oidc-helper-linux-amd64
 
       - name: Build for Windows amd64
         run: |
-          GOOS=windows GOARCH=amd64 go build -o dist/oidc-helper-windows-amd64.exe
+          GOOS=windows GOARCH=amd64 go build -ldflags "-X main.Version=${VERSION}" -o dist/oidc-helper-windows-amd64.exe
 
       - name: Build for macOS amd64
         run: |
-          GOOS=darwin GOARCH=amd64 go build -o dist/oidc-helper-darwin-amd64
+          GOOS=darwin GOARCH=amd64 go build -ldflags "-X main.Version=${VERSION}" -o dist/oidc-helper-darwin-amd64
 
       - name: Upload release assets
         uses: softprops/action-gh-release@v2
@@ -43,4 +47,3 @@ jobs:
             dist/oidc-helper-darwin-amd64
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-

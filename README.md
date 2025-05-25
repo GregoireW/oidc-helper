@@ -68,6 +68,7 @@ providers:
 - `--daemon`: Run as a daemon to hold the token in memory (internal use only).
 - `--pipe <name>`: Named pipe/socket name for daemon communication (default: oidc-helper-pipe).
 - `--log <level>`: Set log level (`debug`, `info`, `warn`, `error`; default: `warn`).
+- `--version`: Show the current version of the tool and exit.
 - `--help`, `-h`: Show all available options and usage information.
 
 For help and available options, run:
@@ -92,6 +93,11 @@ For help and available options, run:
 - **Show all available options:**
   ```sh
   ./oidc-helper --help
+  ```
+
+- **Show the current version:**
+  ```sh
+  ./oidc-helper --version
   ```
 
 ---
