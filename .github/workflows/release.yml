@@ -1,0 +1,44 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 'stable'
+
+      - name: Set up build output directory
+        run: mkdir -p dist
+
+      - name: Build for Linux amd64
+        run: |
+          GOOS=linux GOARCH=amd64 go build -o dist/oidc-helper-linux-amd64
+
+      - name: Build for Windows amd64
+        run: |
+          GOOS=windows GOARCH=amd64 go build -o dist/oidc-helper-windows-amd64.exe
+
+      - name: Build for macOS amd64
+        run: |
+          GOOS=darwin GOARCH=amd64 go build -o dist/oidc-helper-darwin-amd64
+
+      - name: Upload release assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/oidc-helper-linux-amd64
+            dist/oidc-helper-windows-amd64.exe
+            dist/oidc-helper-darwin-amd64
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
