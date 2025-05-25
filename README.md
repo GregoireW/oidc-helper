@@ -1,35 +1,28 @@
 # oidc-helper
 
-A simple CLI tool to fetch OIDC (OpenID Connect) access tokens from any compatible provider. Ideal for developers and operators who need to quickly obtain tokens for testing or automation.
+A simple command-line tool to help you authenticate with OpenID Connect (OIDC) providers and manage tokens easily.
 
 ---
 
-## Features
-- Loads OIDC provider and client info from a YAML config file
-- Discovers OIDC endpoints automatically
-- Guides you through the browser-based authentication flow
-- Retrieves and prints your access token
+## 🚀 Quick Start
 
----
+1. **Download the Latest Release:**
+   - Visit the [Releases page](https://github.com/GregoireW/oidc-helper/releases) and download the latest version for your operating system.
+   - Extract the archive and place the `oidc-helper` executable somewhere in your `PATH` (e.g., `/usr/local/bin` on Linux/macOS).
 
-## Installation
+2. **Configure the Tool:**
+   - Create a configuration file named `config.yaml` (see below for details).
 
-1. **Clone the repository:**
+3. **Run the Tool:**
    ```sh
-   git clone https://github.com/GregoireW/oidc-helper.git
-   cd oidc-helper
-   ```
-2. **Build:**
-   ```sh
-   go build -o oidc-helper
-   ./oidc-helper
+   ./oidc-helper [options]
    ```
 
 ---
 
-## Configuration
+## ⚙️ Configuration
 
-The tool looks for a `config.yaml` file in the following standard locations depending on your operating system:
+The tool looks for a `config.yaml` file in these locations (in order):
 
 - **Linux:**
   - `$XDG_CONFIG_HOME/oidc-helper/config.yaml` (if `XDG_CONFIG_HOME` is set)
@@ -42,7 +35,7 @@ The tool looks for a `config.yaml` file in the following standard locations depe
 - **Fallback:**
   - The directory containing the `oidc-helper` executable
 
-Create a `config.yaml` file in one of these locations with the following content:
+**Example `config.yaml`:**
 
 ```yaml
 default: "provider1"
@@ -57,77 +50,59 @@ providers:
 
 - `default`: The name of the default provider to use if none is specified.
 - `providers`: A map of provider names to their OIDC configuration.
-- `oidc_url`: The base URL of your OIDC provider (e.g., Auth0, Google, Okta)
-- `client_id`: The client ID registered with your provider
+- `oidc_url`: The base URL of your OIDC provider (e.g., Auth0, Google, Okta).
+- `client_id`: The client ID registered with your provider.
 
 ---
 
-## Usage
+## 📝 Usage
 
 1. Fill in `config.yaml` with your provider details.
 2. Run the tool:
    ```sh
    ./oidc-helper [options]
    ```
-   
-   **Options:**
-   - `--daemon`   Run as daemon to hold token in memory
-   - `--pipe`     Named pipe/socket name for daemon communication (default: "oidc-helper-pipe")
-   - `--provider` OIDC provider name (overrides default in config)
-   - `--log`      Set log level: `debug`, `info`, `warn`, `error` (default: `warn`)
-   - `--help`, `-h`   Display help and exit
 
-3. Follow the on-screen instructions:
-   - Open the provided URL in your browser
-   - Log in and authorize
-   - Paste the returned authorization code into the CLI
-4. The tool will display your access token.
+**Common options:**
+- `--provider <name>`: Use a specific provider from your config file (overrides default).
+- `--daemon`: Run as a daemon to hold the token in memory (internal use only).
+- `--pipe <name>`: Named pipe/socket name for daemon communication (default: oidc-helper-pipe).
+- `--log <level>`: Set log level (`debug`, `info`, `warn`, `error`; default: `warn`).
+- `--help`, `-h`: Show all available options and usage information.
 
----
-
-## Example
-
+For help and available options, run:
 ```sh
-$ ./oidc-helper
-eyJhbGciOi... (the access token)
+./oidc-helper --help
 ```
 
 ---
 
-## Daemon & Pipe System
+## 💡 Examples
 
-The oidc-helper can run as a background daemon to securely store and serve OIDC tokens to local clients via a pipe system. This is useful for sharing tokens between processes without exposing them on disk.
+- **Authenticate with the default provider and print the access token:**
+  ```sh
+  ./oidc-helper
+  ```
 
-### How it works
-- **Unix:** Uses a Unix domain socket at `/tmp/<pipeName>.sock`.
-- **Windows:** Uses a named pipe at `\\.\pipe\<pipeName>`.
-- The daemon supports two commands (provider name required):
-  - `GET <provider>`: Returns the current valid token for the given provider (if available and not expired).
-  - `SET <provider>|<token>|<expiry>`: Stores a new token and its expiry time (RFC3339 format) for the given provider.
+- **Authenticate with a specific provider:**
+  ```sh
+  ./oidc-helper --provider provider2
+  ```
 
-### Example Usage
-1. **Start the daemon:**
-   - The daemon will listen for connections from local clients.
-2. **Store a token:**
-   - Send `SET provider1|<token>|<expiry>` to the pipe to store a token for provider1.
-3. **Fetch a token:**
-   - Send `GET provider1` to the pipe to retrieve the current token for provider1.
-
-This system allows multiple processes to share OIDC tokens for multiple providers securely in memory, without writing them to disk.
+- **Show all available options:**
+  ```sh
+  ./oidc-helper --help
+  ```
 
 ---
 
-## Troubleshooting
-- Ensure your `config.yaml` is correct and matches your OIDC provider settings
-- Your client must be registered for the "authorization code" flow
-- If you see errors, check your network connection and provider status
+## 📚 Documentation
+
+- See [TECHNICAL.md](documentations/TECHNICAL.md) for advanced usage and development details.
+- For issues or feature requests, visit the [GitHub Issues page](https://github.com/GregoireW/oidc-helper/issues).
 
 ---
 
-## Dependencies
-- [coreos/go-oidc](https://github.com/coreos/go-oidc)
-- [golang.org/x/oauth2](https://pkg.go.dev/golang.org/x/oauth2)
-- [gopkg.in/yaml.v3](https://pkg.go.dev/gopkg.in/yaml.v3)
+## 🛡️ License
 
----
-```
+This project is licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for details.
