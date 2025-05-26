@@ -65,6 +65,7 @@ providers:
 
 **Common options:**
 - `--provider <name>`: Use a specific provider from your config file (overrides default).
+- `--list-providers`: List all available OIDC providers from your config file. The default provider is marked with an asterisk (`*`).
 - `--daemon`: Run as a daemon to hold the token in memory (internal use only).
 - `--pipe <name>`: Named pipe/socket name for daemon communication (default: oidc-helper-pipe).
 - `--log <level>`: Set log level (`debug`, `info`, `warn`, `error`; default: `warn`).
@@ -117,6 +118,15 @@ For help and available options, run:
       }
     }
   }
+  ```
+
+- **List all available providers (default marked with *):**
+  ```sh
+  ./oidc-helper --list-providers
+  # Output example:
+  # Available providers:
+  # - provider1 *
+  # - provider2
   ```
 
 - **Show all available options:**
