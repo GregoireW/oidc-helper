@@ -38,6 +38,10 @@ jobs:
         run: |
           GOOS=darwin GOARCH=amd64 go build -ldflags "-X main.Version=${VERSION}" -o dist/oidc-helper-darwin-amd64
 
+      - name: Build for macOS arm64 (Apple Silicon)
+        run: |
+          GOOS=darwin GOARCH=arm64 go build -ldflags "-X main.Version=${VERSION}" -o dist/oidc-helper-darwin-arm64
+
       - name: Upload release assets
         uses: softprops/action-gh-release@v2
         with:
@@ -45,5 +49,6 @@ jobs:
             dist/oidc-helper-linux-amd64
             dist/oidc-helper-windows-amd64.exe
             dist/oidc-helper-darwin-amd64
+            dist/oidc-helper-darwin-arm64
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

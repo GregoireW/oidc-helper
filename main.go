@@ -44,6 +44,7 @@ func main() {
 	h := flag.Bool("h", false, "display help and exit (shorthand)")
 	logFlag := flag.String("log", "warn", "set log level: debug, info, warn, error")
 	providerName := flag.String("provider", "", "OIDC provider name (overrides default)")
+	listProviders := flag.Bool("list-providers", false, "list available OIDC providers and exit")
 
 	logutil.LogLevel = logutil.ParseLogLevel(*logFlag)
 
@@ -53,6 +54,23 @@ func main() {
 		flag.PrintDefaults()
 	}
 	flag.Parse()
+
+	if *listProviders {
+		cfg, err := config.LoadConfig()
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error loading config: %v\n", err)
+			os.Exit(1)
+		}
+		fmt.Println("Available providers:")
+		for name := range cfg.Providers {
+			if name == cfg.Default {
+				fmt.Println("-", name, "*")
+			} else {
+				fmt.Println("-", name)
+			}
+		}
+		os.Exit(0)
+	}
 
 	if *versionFlag {
 		fmt.Println(Version)
