@@ -95,14 +95,16 @@ func main() {
 	}
 
 	// If daemon not running, launch it
-	err = daemoninternal.LaunchDaemon(*pipeName)
 	if err != nil {
-		logutil.Logf(logutil.LogError, "Failed to launch daemon: %v", err)
-		os.Exit(1)
-	}
+		err = daemoninternal.LaunchDaemon(*pipeName)
+		if err != nil {
+			logutil.Logf(logutil.LogError, "Failed to launch daemon: %v", err)
+			os.Exit(1)
+		}
 
-	// Wait a moment for daemon to start
-	time.Sleep(500 * time.Millisecond)
+		// Wait a moment for daemon to start
+		time.Sleep(500 * time.Millisecond)
+	}
 
 	ctx := context.Background()
 	provider, err := oidc.NewProvider(ctx, prov.OIDCUrl)
