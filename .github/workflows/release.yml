@@ -30,6 +30,10 @@ jobs:
         run: |
           GOOS=linux GOARCH=amd64 go build -ldflags "-X main.Version=${VERSION}" -o dist/oidc-helper-linux-amd64
 
+      - name: Build for Linux arm64
+        run: |
+          GOOS=linux GOARCH=arm64 go build -ldflags "-X main.Version=${VERSION}" -o dist/oidc-helper-linux-arm64
+
       - name: Build for Windows amd64
         run: |
           GOOS=windows GOARCH=amd64 go build -ldflags "-X main.Version=${VERSION}" -o dist/oidc-helper-windows-amd64.exe
@@ -42,13 +46,27 @@ jobs:
         run: |
           GOOS=darwin GOARCH=arm64 go build -ldflags "-X main.Version=${VERSION}" -o dist/oidc-helper-darwin-arm64
 
+      - name: Create Homebrew archives
+        run: |
+          cd dist
+          for src in oidc-helper-darwin-amd64 oidc-helper-darwin-arm64 oidc-helper-linux-amd64 oidc-helper-linux-arm64; do
+            os_arch="${src#oidc-helper-}"
+            os="${os_arch%-*}"
+            arch="${os_arch##*-}"
+            mkdir -p "archive/${os_arch}"
+            cp "${src}" "archive/${os_arch}/oidc-helper"
+            tar czf "oidc-helper_${VERSION}_${os}_${arch}.tar.gz" -C "archive/${os_arch}" oidc-helper
+          done
+
       - name: Upload release assets
         uses: softprops/action-gh-release@v2
         with:
           files: |
             dist/oidc-helper-linux-amd64
+            dist/oidc-helper-linux-arm64
             dist/oidc-helper-windows-amd64.exe
             dist/oidc-helper-darwin-amd64
             dist/oidc-helper-darwin-arm64
+            dist/oidc-helper_*.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
