@@ -6,9 +6,18 @@ A simple command-line tool to help you authenticate with OpenID Connect (OIDC) p
 
 ## 🚀 Quick Start
 
+### macOS (Homebrew)
+
+```bash
+brew tap GregoireW/oidc-helper https://github.com/GregoireW/oidc-helper
+brew install oidc-helper
+```
+
+### Linux / Windows
+
 1. **Download the Latest Release:**
    - Visit the [Releases page](https://github.com/GregoireW/oidc-helper/releases) and download the latest version for your operating system.
-   - Extract the archive and place the `oidc-helper` executable somewhere in your `PATH` (e.g., `/usr/local/bin` on Linux/macOS).
+   - Extract the archive and place the `oidc-helper` executable somewhere in your `PATH` (e.g., `/usr/local/bin` on Linux).
 
 2. **Configure the Tool:**
    - Create a configuration file named `config.yaml` (see below for details).
